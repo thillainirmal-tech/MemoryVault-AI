@@ -1,0 +1,9 @@
+spring:
+  application: {name: memoryvault-ai}
+  datasource:
+    url: jdbc:h2:file:./data/memoryvault;AUTO_SERVER=TRUE
+    username: sa
+    password:
+  sql.init.mode: always
+server.port: ${PORT:8085}
+management.endpoints.web.exposure.include: health,info
