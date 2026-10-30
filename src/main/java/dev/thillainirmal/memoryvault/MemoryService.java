@@ -13,15 +13,18 @@ public class MemoryService {
  private static final Pattern PHONE=Pattern.compile("(?<!\\d)(?:\\+?\\d[ -]?){9,14}(?!\\d)");
  private static final Pattern SECRET=Pattern.compile("(?i)(api[_ -]?key|token|password)\\s*[:=]\\s*\\S+");
  private final JdbcTemplate db;
- public MemoryService(JdbcTemplate db){this.db=db;}
+ private final java.util.function.UnaryOperator<String> encrypt;
+ private final java.util.function.UnaryOperator<String> decrypt;
+ @org.springframework.beans.factory.annotation.Autowired public MemoryService(JdbcTemplate db,VaultCipher cipher){this.db=db;this.encrypt=cipher::encrypt;this.decrypt=cipher::decrypt;}
+ MemoryService(JdbcTemplate db){this.db=db;this.encrypt=java.util.function.UnaryOperator.identity();this.decrypt=java.util.function.UnaryOperator.identity();}
  public Turn remember(String id,String role,String content,String mediaType,int ttlHours){
    String clean=redact(content);Instant now=Instant.now();Instant expiry=now.plus(Math.max(1,Math.min(ttlHours,720)),ChronoUnit.HOURS);
-   db.update("INSERT INTO memory_turns(conversation_id,role,content,media_type,created_at,expires_at) VALUES(?,?,?,?,?,?)",id,role,clean,mediaType,Timestamp.from(now),Timestamp.from(expiry));
+   db.update("INSERT INTO memory_turns(conversation_id,role,content,media_type,created_at,expires_at) VALUES(?,?,?,?,?,?)",id,role,encrypt.apply(clean),mediaType,Timestamp.from(now),Timestamp.from(expiry));
    return new Turn(role,clean,mediaType,now,expiry);
  }
  public List<Turn> recall(String id){
    db.update("DELETE FROM memory_turns WHERE expires_at < CURRENT_TIMESTAMP");
-   return db.query("SELECT role,content,media_type,created_at,expires_at FROM memory_turns WHERE conversation_id=? ORDER BY created_at", (rs,n)->new Turn(rs.getString(1),rs.getString(2),rs.getString(3),rs.getTimestamp(4).toInstant(),rs.getTimestamp(5).toInstant()),id);
+   return db.query("SELECT role,content,media_type,created_at,expires_at FROM memory_turns WHERE conversation_id=? ORDER BY created_at", (rs,n)->new Turn(rs.getString(1),decrypt.apply(rs.getString(2)),rs.getString(3),rs.getTimestamp(4).toInstant(),rs.getTimestamp(5).toInstant()),id);
  }
  public Context context(String id){
    List<Turn> turns=recall(id);List<Turn> recent=turns.stream().skip(Math.max(0,turns.size()-6)).toList();

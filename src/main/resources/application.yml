@@ -1,9 +1,11 @@
 spring:
-  application: {name: memoryvault-ai}
+  application.name: memoryvault-ai
   datasource:
-    url: jdbc:h2:file:./data/memoryvault;AUTO_SERVER=TRUE
-    username: sa
-    password:
-  sql.init.mode: always
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/memoryvault}
+    username: ${DATABASE_USERNAME:memoryvault}
+    password: ${DATABASE_PASSWORD:memoryvault}
 server.port: ${PORT:8085}
-management.endpoints.web.exposure.include: health,info
+management.endpoints.web.exposure.include: health,info,prometheus
+management.endpoint.health.probes.enabled: true
+memoryvault:
+  encryption-key: ${MEMORY_ENCRYPTION_KEY}
