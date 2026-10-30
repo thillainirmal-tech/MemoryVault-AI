@@ -4,6 +4,14 @@ Persistent, privacy-aware conversational memory for Java applications.
 
 [![CI](https://github.com/thillainirmal-tech/MemoryVault-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/thillainirmal-tech/MemoryVault-AI/actions/workflows/ci.yml)
 
+## Product tour
+
+![MemoryVault AI privacy-aware memory console](docs/media/product-tour.gif)
+
+[Open the full-resolution screenshot](docs/media/product-console.jpg) · **Recruiter demo:** store synthetic conversation turns, verify redaction and encrypted persistence, then demonstrate TTL cleanup and explicit deletion.
+
+> **Deployment status:** tested, containerized and ready for an AWS deployment with managed PostgreSQL and secrets; no public production endpoint is claimed yet.
+
 ## Features
 
 - durable PostgreSQL conversation ledger with Flyway migrations
