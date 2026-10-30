@@ -12,6 +12,7 @@ services:
       DATABASE_USERNAME: memoryvault
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:?set DATABASE_PASSWORD}
       MEMORY_ENCRYPTION_KEY: ${MEMORY_ENCRYPTION_KEY:?set MEMORY_ENCRYPTION_KEY}
+      MEMORY_API_KEY: ${MEMORY_API_KEY:?set MEMORY_API_KEY}
     depends_on: {postgres: {condition: service_healthy}}
     read_only: true
     tmpfs: ["/tmp"]

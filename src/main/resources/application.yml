@@ -9,3 +9,4 @@ management.endpoints.web.exposure.include: health,info,prometheus
 management.endpoint.health.probes.enabled: true
 memoryvault:
   encryption-key: ${MEMORY_ENCRYPTION_KEY}
+  api-key: ${MEMORY_API_KEY:change-me-before-production-32chars}

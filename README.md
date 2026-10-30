@@ -10,6 +10,8 @@ Persistent, privacy-aware conversational memory for Java applications.
 
 [Open the full-resolution screenshot](docs/media/product-console.jpg) · **Recruiter demo:** store synthetic conversation turns, verify redaction and encrypted persistence, then demonstrate TTL cleanup and explicit deletion.
 
+[▶ Watch the recorded PostgreSQL write/read demo (5 seconds)](docs/media/runtime-demo.mp4)
+
 > **Deployment status:** tested, containerized and ready for an AWS deployment with managed PostgreSQL and secrets; no public production endpoint is claimed yet.
 
 ## Features
@@ -21,9 +23,10 @@ Persistent, privacy-aware conversational memory for Java applications.
 - rolling context window with older-turn compression
 - multimodal content-type metadata
 - explicit conversation deletion
+- API-key authentication with constant-time credential comparison
 - responsive inspection dashboard and REST API
 
-Set `DATABASE_PASSWORD` and a base64-encoded 32-byte `MEMORY_ENCRYPTION_KEY`, then run `docker compose up --build`. Verify with `mvn verify`.
+Set `DATABASE_PASSWORD`, `MEMORY_API_KEY`, and a base64-encoded 32-byte `MEMORY_ENCRYPTION_KEY`, then run `docker compose up --build`. Every `/api/**` request requires `X-API-Key`. Verify with `mvn verify`.
 
 This service stores no embeddings and requires no model API key. Content is redacted and then encrypted; expiry and explicit deletion remain authoritative database operations. Deploy behind an identity-aware gateway and managed secret store for tenant authentication and key rotation.
 
